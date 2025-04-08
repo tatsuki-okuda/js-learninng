@@ -1,125 +1,4 @@
 // ***********************************************************************************************************************
-// PromiseのECMAScriptへの導入
-// ***********************************************************************************************************************
-
-// Promiseは、ECMAScript 2015（ES6）で正式にJavaScriptの標準仕様として導入されました。
-// それ以前は、コールバック関数を用いた非同期処理が主流でしたが、
-// 複雑な非同期処理を行う際に「コールバック地獄」と呼ばれるコードの可読性や保守性が著しく低下する問題がありました。
-
-// Promiseは、そのような問題を解決するために、非同期処理の結果をオブジェクトとして表現し、
-// その結果を後から取得したり、エラー処理を簡潔に記述したりするための仕組みを提供します。
-
-//
-//
-//
-//
-//
-//
-//
-//
-
-// ***********************************************************************************************************************
-// **Promiseの主な特徴**
-// ***********************************************************************************************************************
-
-// * **非同期処理の結果を表すオブジェクト:**
-//     * Promiseは、非同期処理が完了したか、または失敗したかという結果を保持するオブジェクトです。
-//     * これにより、非同期処理の結果を後から取得したり、エラーハンドリングを効率的に行うことができます。
-// * **状態管理:**
-//     * Promiseオブジェクトは、「保留 (pending)」、「成功 (fulfilled)」、「失敗 (rejected)」の3つの状態を持ちます。
-//     * これにより、非同期処理の進行状況を把握し、状態に応じた処理を記述できます。
-// * **メソッドチェーン:**
-//     * `.then()`や`.catch()`などのメソッドをチェーン状に繋げることで、複数の非同期処理を順次実行したり、エラーハンドリングをまとめて記述したりできます。
-// * **コールバック地獄の解消:**
-//     * 従来のコールバック関数によるネストの深いコード（コールバック地獄）を回避し、可読性の高いコードを記述できます。
-
-//
-//
-//
-//
-//
-//
-//
-//
-
-// ***********************************************************************************************************************
-// **Promiseの基本的な使い方**
-// ***********************************************************************************************************************
-
-// 1.  **Promiseオブジェクトの生成:**
-//     * `new Promise()`コンストラクタを使用して、Promiseオブジェクトを生成します。
-//     * コンストラクタには、`resolve`と`reject`の2つの引数を持つコールバック関数を渡します。
-
-// 第一引数にコールバック関数を渡さないとエラーになる。
-// const task = new Promise();
-
-// promiseに渡したコールバックは同期処理として即時実行される。
-// インスタンス化された瞬間
-// const task = new Promise((resolve, reject) => {
-// 	console.log('promiseだよ');
-// });
-
-//
-//
-
-// 2.  **非同期処理の実行と結果の処理:**
-//     * 非同期処理が成功した場合、`resolve()`関数を呼び出し、成功時の結果を渡します。
-//     * 非同期処理が失敗した場合、`reject()`関数を呼び出し、エラーオブジェクトを渡します。
-
-// const task = new Promise((resolve, reject) => {
-// 	setTimeout(() => {
-// 		// resolve('resolve!!');
-// 		reject('reject!!');
-// 	}, 1000);
-// });
-
-//
-//
-
-// 3.  **結果の取得とエラーハンドリング:**
-//     * `.then()`メソッドを使用して、成功時の結果を取得し、後続の処理を記述します。
-//     * `.catch()`メソッドを使用して、エラーが発生した場合の処理を記述します。
-
-// 1秒後にresolveで非同期処理が解決されてthenが実行される。
-// task.then((v) => console.log('thenだよ', v));
-
-// rejectが呼ばれた時はcatchで受け取れる。
-// task.catch((v) => console.log('catchだよ', v));
-
-//
-//
-//
-//
-//
-//
-//
-//
-
-// ***********************************************************************************************************************
-// **Promiseの利点**
-// ***********************************************************************************************************************
-
-// * **コードの可読性向上:**
-//     * 非同期処理のフローを直感的に記述できるため、コードが読みやすくなります。
-
-// * **エラーハンドリングの効率化:**
-//     * 複数の非同期処理のエラーをまとめて処理できるため、エラーハンドリングが容易になります。
-
-// * **非同期処理の組み合わせ:**
-//     * `Promise.all()`や`Promise.race()`などのメソッドを使用して、複数の非同期処理を組み合わせた複雑な処理を記述できます。
-
-// **Promiseは、JavaScriptにおける非同期処理を扱う上で非常に強力なツールであり、現代のWebアプリケーション開発において欠かせない技術です。**
-
-//
-//
-//
-//
-//
-//
-//
-//
-
-// ***********************************************************************************************************************
 // **Promiseの深掘り**
 // ***********************************************************************************************************************
 
@@ -194,7 +73,7 @@
 //
 //
 
-// --------------------------------------------- tips ---------------------------------------------
+// ------------------------- tips ---------------------------------------------
 // reject外でthrowされたら？
 
 // const unexpected = new Promise((resolve, reject) => {
@@ -239,7 +118,7 @@
 //
 //
 
-// **`Promise.prototype.then`メソッド**
+// **`Promise.prototype.then`メソッド*************************************************************
 
 // `then`メソッドは、Promiseが`fulfilled`状態になったときに実行されるコールバック関数と、
 // `rejected`状態になったときに実行されるコールバック関数を引数として受け取ります。
@@ -248,49 +127,133 @@
 // const thenTask = new Promise((resolve) => {
 // 	resolve('promiseStateがfulfilledになる');
 // });
-// thenTask.then((v) => console.log(v));
-// thenTask.catch(() => console.log('実行されない'));
-// thenTask.finally(() => console.log('最後にfinallyが呼ばれる'));
+
+// thenTask
+// 	.then((v) => console.log(v))
+// 	.catch(() => console.log('実行されない'))
+// 	.finally(() => console.log('最後にfinallyが呼ばれる'));
+
+//
+// thenの中でreturnされた値は次のthenに渡される
+
+// thenTask
+// 	.then((v) => {
+// 		console.log('then1', v);
+// 		return '次のthen2へ';
+// 	})
+// 	.then((v) => {
+// 		console.log('then2', v);
+// 		return '次のthen3';
+// 	})
+// 	.then((v) => {
+// 		console.log('then3', v);
+// 	});
+
+// もしreturnでpromiseが渡された場合はそのpromiseの解決を待ってから
+// 後続のthenが動く
+
+// thenTask
+// 	.then((v) => {
+// 		console.log('then1', v);
+// 		return new Promise((r) => {
+// 			setTimeout(() => {
+// 				console.log('promiseが1秒後に解決される');
+// 				r('次のthen');
+// 			}, 1000);
+// 		});
+// 	})
+// 	.then((v) => {
+// 		console.log('1秒後のthen2', v);
+// 		return '次のthen3';
+// 	})
+// 	.then((v) => {
+// 		console.log('then3', v);
+// 	});
 
 //
 //
+//
+//
+//
 
-// **`Promise.prototype.catch`メソッド**
+// **`Promise.prototype.catch`メソッド*************************************************************
 
 // `catch`メソッドは、Promiseが`rejected`状態になったときに実行されるコールバック関数を引数として受け取ります。
 
 // const catchTask = new Promise((resolve, reject) => {
 // 	reject('promiseStateがrejectedになる');
 // });
-// catchTask.then((v) => console.log(v));
-// catchTask.catch((e) => console.log('catchが実行される', e));
-// catchTask.finally(() => console.log('最後にfinallyが呼ばれる'));
 
-// --------------------------------------------- tips ---------------------------------------------
+// catchTask
+// 	.then((v) => console.log(v))
+// 	.catch((e) => console.log('catchが実行される', e))
+// 	.finally(() => console.log('最後にfinallyが呼ばれる'));
+
+//
+//
+
+// ------------------------- tips ---------------------------------------------
 // `then`メソッドの第2引数にはPromiseが`rejected`状態になると実行されるコールバック関数を登録できます。
 //  第2引数のコールバック関数は、Promiseの失敗理由（エラーオブジェクト）を引数として実行されます。
 // `catch`メソッドは、`then(undefined, onRejected)`と等価です。
 
-// const thenTask2 = new Promise((resolve, reject) => {
+// const catchTask1 = new Promise((resolve, reject) => {
 // 	reject('promiseStateがrejectedになる');
 // });
 
-// thenTask2.then(
-// 	undefined,
-// 	// rejectされると第二引数のコールバックが実行される。
-// 	// rejectに渡された値が入る
-// 	(e) => console.log('thenの第二引数のコールバックが実行される。', e)
-// );
-// // ↑は以下のcatchと同じ
-// // thenの第二引数と同じ意味になる
-// // ただし両方設定している時はthenの第二引数が実行されて、その後にcatchが呼ばれる
-// thenTask2.catch((e) => console.log('catchが呼ばれる', e));
-// thenTask2.finally(() => console.log('最後にfinallyが呼ばれる'));
+// catchTask1
+// 	.then(
+// 		undefined,
+// 		// rejectされると第二引数のコールバックが実行される。
+// 		// rejectに渡された値が入る
+// 		(e) => console.log('thenの第二引数のコールバックが実行される。', e)
+// 	)
+// 	// ↑は以下のcatchと同じ
+// 	// thenの第二引数と同じ意味になる
+// 	// ただし両方設定している時はthenの第二引数が実行されて、その後にcatchが呼ばれる
+// 	.catch((e) => console.log('catchが呼ばれる', e))
+// 	.finally(() => console.log('最後にfinallyが呼ばれる'));
 
 //
 //
 
-// **`Promise.prototype.finally`メソッド**
+// ------------------------- tips2 -------------------------------------------
+
+// const catchTask2 = new Promise((resolve, reject) => {
+// 	reject('promiseStateがrejectedになる');
+// });
+
+// catch内でreturnされた場合、次のthenに渡される
+
+// catchTask2
+// 	.then((v) => console.log('ignore'))
+// 	.catch((v) => {
+// 		console.log('catch1', v);
+// 		return 'thenへ渡される';
+// 	})
+// 	.catch((v) => console.log('ignore', v))
+// 	.then((v) => console.log('then1', v));
+
+// catchの中でpromiseが呼ばれた場合、そのpromiseの解決を待つ
+// そして後続のthenメソッドが動く。
+
+// catchTask2
+// 	.catch((v) => {
+// 		console.log('catch', v);
+// 		return new Promise((r) => {
+// 			setTimeout(() => r('完了！'), 1000);
+// 		});
+// 	})
+// 	.then((v) => console.log('then', v))
+// 	.catch((v) => console.log('catch', v));
+
+//
+//
+//
+//
+//
+
+// **`Promise.prototype.finally`メソッド*************************************************************
 
 // * `finally`メソッドは、Promiseが`fulfilled`または`rejected`状態になったときに実行される。
 // * `finally`メソッドは、Promiseの状態に関係なく、常に実行されます。
@@ -300,13 +263,17 @@
 // 	resolve('promiseStateがfulfilledになる');
 // 	// reject('promiseStateがrejectedになる');
 // });
-// finallyTask.then((v) => console.log('thenが動く', v));
-// finallyTask.catch((v) => console.log('catchが動く', v));
 
-// vはundefinedになる
-// finallyTask.finally((v) => console.log('最後にfinallyが動く', v));
+// finallyTask
+// 	.then((v) => console.log('thenが動く', v))
+// 	.catch((v) => console.log('catchが動く', v))
+// 	// vはundefinedになる
+// 	.finally((v) => console.log('最後にfinallyが動く', v));
 
-// --------------------------------------------- tips ---------------------------------------------
+//
+//
+
+// ------------------------- tips ---------------------------------------------
 
 // 一度finallyが実行された場合、その後に登録されているfinallyを全て実行する。
 // finallyTask.finally((v) => console.log('最後にfinally2.5が動く'));
@@ -314,12 +281,59 @@
 // finallyの後にthenやcatchが登録された場合、実は動く。
 // ただ動作としてはfinallyは常にthenやcatchの後に動く;
 
-// finallyTask.then((v) => console.log('then2が動く'));
-// finallyTask.then((v) => console.log('then3が動く'));
-// finallyTask.catch((v) => console.log('catch2が動く'));
-// finallyTask.catch((v) => console.log('catch3が動く'));
-// finallyTask.finally((v) => console.log('最後にfinally2が動く'));
+// const finallyTask2 = new Promise((resolve, reject) => {
+// 	resolve('promiseStateがfulfilledになる');
+// });
+// finallyTask2
+// 	.then((v) => console.log('thenが動く', v))
+// 	.catch((v) => console.log('catchが動く', v))
+// 	.finally((v) => console.log('最後にfinallyが動く', v))
+// 	.then((v) => console.log('then2が動く'))
+// 	.then((v) => console.log('then3が動く'))
+// 	.catch((v) => console.log('catch2が動く'))
+// 	.catch((v) => console.log('catch3が動く'))
+// 	.finally((v) => console.log('最後にfinally2が動く'));
 
+//
+//
+
+// ------------------------- tips2 ---------------------------------------------
+// finallyで値が返された時の動作
+
+// const task = new Promise((resolve, reject) => {
+// 	resolve('完了！');
+// });
+
+// task
+// 	.then((v) => {
+// 		console.log('then1', v);
+// 		return '次のthen';
+// 	})
+// 	// finallyでreturnをした場合は基本的には無視される。
+// 	.finally((v) => 'ignore')
+// 	.then((v) => console.log('then2', v));
+
+//ただしfinallyでpromiseが返された時はそのpromiseの解決を待つ
+
+// task
+// 	.then((v) => {
+// 		console.log('then1', v);
+// 		return '次のthen';
+// 	})
+// 	// finallyでreturnをした場合は基本的には無視される。
+// 	.finally((v) => {
+// 		console.log('finally', v);
+// 		return new Promise((r) => {
+// 			setTimeout(() => {
+// 				r('finallyが1秒後に解決');
+// 			}, 1000);
+// 		});
+// 	})
+// 	.then((v) => console.log('1秒後に動くthen2', v));
+
+//
+//
+//
 //
 //
 //
@@ -336,8 +350,12 @@ const pendingTask = new Promise(() => {});
 // PromiseStateとPromiseResultはブラウザから確認することができる。
 // console.log(pendingTask);
 
+//
+
 // ブラウザからは確認できないが、pending状態の時にはPromiseFulfillReactions と PromiseRejectReactions の
 // それぞれ Promise が成功（fulfilled）または失敗（rejected）したときに実行されるべきコールバック関数（リアクション）のリストを保持する内部スロットを持っている。
+
+//
 
 // PromiseFulfillReactions:
 // 　Promise が成功したときに実行されるべき then メソッドの成功時コールバック関数のリスト。
@@ -345,14 +363,22 @@ const pendingTask = new Promise(() => {});
 // PromiseRejectReactions:
 // 　Promise が失敗したときに実行されるべき then メソッドの失敗時コールバック関数、または catch メソッドのコールバック関数のリスト。
 
+//
+
 // これらのリストは、then メソッドや catch メソッドが呼び出されたときに、それぞれのコールバック関数が登録される。
 // そして、Promise の状態が fulfilled または rejected に遷移したときに、これらのリストに登録されたコールバック関数が順番に実行されます。
 
-// pendingTask.then((v) => console.log('PromiseFulfillReactionsに登録'));
-// pendingTask.then((v) => console.log('PromiseFulfillReactionsに登録'));
+//
 
-// pendingTask.catch((v) => console.log('PromiseRejectReactionsに登録'));
-// pendingTask.catch((v) => console.log('PromiseRejectReactionsに登録'));
+// pendingTask
+// 	.then((v) => console.log('PromiseFulfillReactionsに登録'))
+// 	.then((v) => console.log('PromiseFulfillReactionsに登録'))
+
+// 	.catch((v) => console.log('PromiseRejectReactionsに登録'))
+// 	.catch((v) => console.log('PromiseRejectReactionsに登録'));
+
+//
+//
 
 // PromiseIsHandled
 // PromiseIsHandled は、Promise の結果が少なくとも一度は処理されたかどうかを示す内部スロットです。
@@ -363,12 +389,17 @@ const pendingTask = new Promise(() => {});
 
 //
 //
+//
+//
+//
+//
 
 // **`Promise.prototype.finally`メソッドのゆくへ**
 
 // `finally` メソッドは、`PromiseFulfillReactions` や `PromiseRejectReactions` とは異なる方法で管理されます。
 // `finally` メソッドは、Promise の状態（成功または失敗）に関係なく、Promise が確定したときに常に実行されるコールバック関数を登録するために使用されます。
 
+//
 //
 
 // **`finally` メソッドの管理方法**
@@ -389,6 +420,10 @@ const pendingTask = new Promise(() => {});
 //     `finally` メソッドは、元の Promise と同じ結果を持つ新しい Promise を返します。
 //     ただし、`finally` メソッドのコールバック関数内でエラーが発生した場合、そのエラーは新しい Promise の結果として伝播します。
 
+//
+//
+//
+
 // **`finally` メソッドの目的**
 
 // `finally` メソッドは、Promise の状態に関係なく実行する必要があるクリーンアップ処理などに使用されます。例えば、以下のようなケースで `finally` メソッドが役立ちます。
@@ -397,6 +432,9 @@ const pendingTask = new Promise(() => {});
 // * ローディング状態の解除
 // * ログの記録
 
+//
+//
+//
 //
 //
 

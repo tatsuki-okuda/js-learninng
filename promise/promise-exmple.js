@@ -9,7 +9,7 @@ class MyPromise {
 		const resolve = (value) => {
 			if (value instanceof Promise) {
 				/**
-				 * 本当は此処でresolveにpromiseが渡された時の動作を書きたいところ
+				 * 本当は此処でresolveにpromiseが渡された時(thenableオブジェクト)の動作を書きたいところ
 				 * 内部的には引数で渡されたpromiseの解決を待って外がのpromiseが解決される
 				 */
 			} else {
