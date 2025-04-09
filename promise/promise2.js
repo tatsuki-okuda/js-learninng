@@ -192,7 +192,7 @@
 //
 //
 
-// ------------------------- tips ---------------------------------------------
+// ------------------------- tips1---------------------------------------------
 // `then`メソッドの第2引数にはPromiseが`rejected`状態になると実行されるコールバック関数を登録できます。
 //  第2引数のコールバック関数は、Promiseの失敗理由（エラーオブジェクト）を引数として実行されます。
 // `catch`メソッドは、`then(undefined, onRejected)`と等価です。
@@ -440,7 +440,7 @@ const pendingTask = new Promise(() => {});
 
 // *** Promiseの状態遷移④ **************************************************************
 
-// thenメソッドの動きの違い
+// then,catchメソッドの動きの違い
 // バグの原因になりやすいpromiseの罠！
 
 // const promiseTask = new Promise((r) => {
@@ -509,21 +509,41 @@ const pendingTask = new Promise(() => {});
 // 	.finally(() => console.log('finally1'))
 // 	.then((v) => {
 // 		console.log('then2', v);
-// 		return '次のthenへ';
+// 		throw new Error('エラー発生');
 // 	})
 // 	.then((v) => {
 // 		console.log('then3', v);
 // 		return '次のthenへ';
 // 	})
-// 	.finally(() => console.log('finally2'));
+// 	.catch((e) => {
+// 		console.log('catch1', e);
+// 		return '次の処理';
+// 	})
+// 	.finally(() => console.log('finally2'))
+// 	.finally(() => {
+// 		console.log('finally3');
+// 		return new Promise((r) => {
+// 			setTimeout(() => {
+// 				r('1秒ごの処理');
+// 			}, 1000);
+// 		});
+// 	})
+//   .then((v) => {
+// 		console.log('then10', v);
+// 		return '次のthenへ';
+// 	});
 
-// spaghettiPromise.then((v) => {
-// 	console.log('then4', v);
-// 	return '次のthenへ';
-// });
+// spaghettiPromise
+// 	.then((v) => {
+// 		console.log('then4', v);
+// 		throw new Error('エラー発生2！');
+// 	});
 // spaghettiPromise.then((v) => {
 // 	console.log('then5', v);
 // 	return '次のthenへ';
+// });
+// spaghettiPromise.catch((e) => {
+// 	console.log('catch2', e);
 // });
 // spaghettiPromise.finally(() => console.log('finally3'));
 
@@ -531,6 +551,14 @@ const pendingTask = new Promise(() => {});
 // 	.then((v) => {
 // 		console.log('then6', v);
 // 		return '次のthenへ';
+// 	})
+// 	.catch((e) => {
+// 		console.log('catch3', e);
+// 		return new Promise((r) => {
+// 			setTimeout(() => {
+// 				r('1秒ごの処理');
+// 			}, 1000);
+// 		});
 // 	})
 // 	.finally(() => console.log('finally4'));
 
@@ -541,12 +569,15 @@ const pendingTask = new Promise(() => {});
 // 	})
 // 	.finally(() => console.log('finally5'));
 
-// const spaghettiPromise4 = spaghettiPromise3
-// 	.then((v) => {
+//   const spaghettiPromise4 = spaghettiPromise3
+//   .then((v) => {
 // 		console.log('then8', v);
 // 		return '次のthenへ';
 // 	})
-// 	.finally(() => console.log('finally6'));
+//   .then((v) => {
+// 		console.log('then9', v);
+// 		return '次のthenへ';
+// 	})
 
 // 答え
-// 1, 4, 5, f3, 6, f1, f4, 2, 7, 3, f5, f2, 8, f6
+// 1, 4, 5, f3, 6, f1, f4, 2, 7, c 1, f5, f2, 8, f3, 9, error2, 10
