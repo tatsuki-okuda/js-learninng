@@ -439,8 +439,8 @@ const pendingTask = new Promise(() => {});
 //
 
 // *** Promiseの状態遷移④ **************************************************************
+// promiseチェーン
 
-// then,catchメソッドの動きの違い
 // バグの原因になりやすいpromiseの罠！
 
 // const promiseTask = new Promise((r) => {
@@ -492,8 +492,209 @@ const pendingTask = new Promise(() => {});
 
 //
 //
+//
+//
 
+// *** Promiseの状態遷移⑤ **************************************************************
+
+// promiseのエラー処理
+
+// promiseの内部で起こったエラーに関してはcatchメソッドでエラーハンドリングできる。
+// この場合はコンソールにエラーは出ない
+
+// const task = new Promise((r) => {
+// 	setTimeout(() => {
+// 		r('1秒後');
+// 	}, 1000);
+// });
+
+// task
+// 	.then((v) => {
+// 		console.log('then', v);
+// 		throw new Error('エラー発生');
+// 	})
+// 	.catch((e) => console.log('catch', e));
+
+//
+//
+
+// ではこの場合はどうなる？
+// const task2 = task.then((v) => {
+// 	console.log('then', v);
+// 	throw new Error('エラー発生2');
+// });
+// .catch((e) => console.log('catch4', e));
+
+// catchを追加したらハンドリングできそうな感じがするが、実際にはできない。
+// task.catch((e) => console.log('catch2', e));
+
+// task2に対するcatchでtaskのthenで発生したエラーハンドリングができる
+// const task3 = task2.catch((e) => console.log('catch3', e));
+
+//
+
+// どういう時にエラーが出るのか？
+// → エラーが起きたpromiseの中でcatchが呼び出されていない状態でrejectされた時
+
+// const error = new Promise((r) => {
+// 	setTimeout(() => {
+// 		r('1秒後');
+// 	}, 1000);
+// });
+// const error2 = error.then(() => {
+// 	console.log('then1');
+// 	throw new Error('エラー！');
+// });
+
+// const error3 = error2
+// 	.then(() => {
+// 		console.log('then2');
+// 	})
+// 	.catch(() => console.log('catch2'));
+
+// // error3で呼び出されたcatchはerror3に紐づくのでerror2でのエラーをハンドリングしない。
+// error3.catch(() => console.log('catch3'));
+
+// またエラーが発生した場合、エラーが発生した時点からハンドリングされているcatchまでの処理がスキップされる。
+// const error = new Promise((_, rj) => {
+// 	setTimeout(() => {
+// 		rj('1秒後にエラー');
+// 	}, 1000);
+// });
+// error
+// 	.then(() => console.log('then1'))
+// 	.then(() => console.log('then2'))
+// 	.then(() => console.log('then3'))
+//   // ↑のthenはスキップ
+// 	.catch(() => console.log('catch'))
+// 	.then(() => console.log('then4'))
+// 	.then(() => console.log('then5'));
+
+//
+
+// const error2 = new Promise((r, rj) => {
+// 	setTimeout(() => {
+// 		r('1秒後にエラー');
+// 	}, 1000);
+// });
+// error2
+// 	.then(() => console.log('then1'))
+// 	.then(() => {
+// 		console.log('then2');
+// 		throw new Error('エラー！');
+// 	})
+// 	.then(() => console.log('then3'))
+// 	// ↑のthen3はスキップ
+// 	.catch(() => console.log('catch'))
+// 	.then(() => console.log('then4'))
+// 	.then(() => console.log('then5'));
+
+// catchがない時はそれ以降の処理がキャンセルし次のcatchでハンドリング
+
+// const error3 = new Promise((r, rj) => {
+// 	setTimeout(() => {
+// 		r('1秒後にエラー');
+// 	}, 1000);
+// });
+// const error4 = error3
+// 	.then(() => console.log('then1'))
+// 	.then(() => {
+// 		console.log('then2');
+// 		throw new Error('エラー！');
+// 	})
+// 	.then(() => console.log('then3'))
+// 	.then(() => console.log('then4'))
+// 	.then(() => console.log('then5'));
+
+// error4
+// 	.catch(() => console.log('catch2'))
+// 	.then(() => console.log('then6'))
+// 	.then(() => console.log('then7'));
+
+//
+//
+//
+
+// ------------------------- tips ---------------------------------------------
+
+// promise内部でのエラーの監視はどうなっている？
+
+// 未処理を監視するPromiseIsHandled
+
+// `PromiseIsHandled` は、ECMAScript の Promise の仕様において、Promise の結果が少なくとも一度は処理されたかどうかを示す内部スロットです。
+// このスロットは、未処理の Promise の拒否（Unhandled Promise Rejection）を検出するために使用されます。
+
+//
+
+// **`PromiseIsHandled` の動作*************************
+
+// 1.  **初期状態:**
+//     * Promise オブジェクトが生成されたとき、`PromiseIsHandled` は `false` に設定されます。
+
+// 2.  **処理された状態:**
+//     * Promise の結果が `then` メソッドまたは `catch` メソッドによって処理されると、`PromiseIsHandled` は `true` に設定されます。
+//     * 具体的には、`then` メソッドまたは `catch` メソッドが呼び出され、それぞれのコールバック関数が実行されると、`PromiseIsHandled` が `true` になります。
+
+// 3.  **未処理の拒否の検出:**
+//     * Promise が拒否（rejected）された状態で、`PromiseIsHandled` が `false` のままである場合、それは未処理の拒否となります。
+//     * この場合、JavaScript エンジンは、環境によっては警告を表示することがあります。
+//     * これにより、開発者は潜在的なエラーを早期に発見し、修正することができます。
+
+//
+//
+
+// **`PromiseIsHandled` の目的**
+
+// * **未処理の拒否の検出:**
+//     * `PromiseIsHandled` は、Promise の結果が処理されたかどうかを追跡し、未処理の拒否を検出するために使用されます。
+// * **エラー処理の改善:**
+//     * 未処理の拒否を検出することで、開発者はエラー処理を改善し、より堅牢なコードを作成できます。
+// * **デバッグの支援:**
+//     * 未処理の拒否の警告は、デバッグ時に役立ち、問題を特定するのに役立ちます。
+
+//
+//
+
+// 最終的にPromiseIsHandledがfalseのものがあるとエラーが出される。
+
+// const task = new Promise((r, rj) => {
+// 	setTimeout(() => {
+// 		r('1秒後にエラー');
+// 	}, 1000);
+// });
+
+// const task2 = task.then(() => {
+// 	console.log('then1');
+// 	throw new Error('エラー！');
+// });
+
+// // ここはtask2に紐づかなthenなので処理される
+// const task3 = task.then(() => {
+// 	console.log('then2');
+// });
+
+// //  task2の1回目のthenでエラーが発生したことで此処のthenは処理されないので
+// // PromiseIsHandledはfalseになっている。
+// task2.then(() => {
+// 	console.log('then3');
+// });
+
+// // ここはtask2に紐づかなthenなので処理される
+// task3.then(() => {
+// 	console.log('then4');
+// });
+
+// 最後にtask2のPromiseIsHandledはfalseになっているのでエラーを出す。
+
+//
+//
+//
+//
+//
+
+// ***********************************************************************************************************************
 // [promiseマスターへの道]
+// ***********************************************************************************************************************
 
 // const spaghettiPromise = new Promise((r) => {
 // 	setTimeout(() => {
